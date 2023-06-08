@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 
+
 questions = [
     "Does the child have any allergies to medicines, food, or any vaccine?",
     "Has the child had a serious reaction to a vaccine in the past?"
