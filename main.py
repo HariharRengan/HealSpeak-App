@@ -7,12 +7,55 @@ from playsoundLocal import playsound
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
+import json
+from translate import Translator
 
+# Load settings from file
+with open('settings.txt', 'r') as f:
+    settings = json.load(f)
+lang = settings['lang']
+speed = settings['speed']
+
+languages = {
+    'af': 'Afrikaans',
+    'ar': 'Arabic',
+    'bg': 'Bulgarian',
+    'bn': 'Bengali',
+    'bs': 'Bosnian',
+    'ca': 'Catalan',
+    'cs': 'Czech',
+    'da': 'Danish',
+    'de': 'German',
+    'el': 'Greek',
+    'en': 'English',
+    'es': 'Spanish',
+    'et': 'Estonian',
+    'fi': 'Finnish',
+    'fr': 'French',
+    'gu': 'Gujarati',
+    'hi': 'Hindi',
+    'hr': 'Croatian',
+    'hu': 'Hungarian',
+    'id': 'Indonesian'
+}
+
+speeds = {
+    '0.5': 'Slow',
+    '1.0': 'Normal',
+    '1.5': 'Fast'
+}
 
 questions = [
     "Does the child have any allergies to medicines, food, or any vaccine?",
-    "Has the child had a serious reaction to a vaccine in the past?"
+    "Has the child had a serious reaction to a vaccine in the past?",
 ]
+
+# Translate questions
+def translate_questions(lang):
+    translator = Translator(to_lang=lang)
+    return [translator.translate(q) for q in questions]
+
+questions = translate_questions(lang)
 
 class TriageSystem:
     def __init__(self, timeout=30):
@@ -28,7 +71,7 @@ class TriageSystem:
         question_label.update()
 
         # convert the question to speech
-        tts = gTTS(text=question, lang='en', tld='co.in')
+        tts = gTTS(text=question, lang=lang)
         tts.save("question.mp3")
 
         # play the question
@@ -46,7 +89,7 @@ class TriageSystem:
         # try recognizing the speech in the audio
         try:
             # use the 'default' language model and show all results
-            response = r.recognize_google(audio, language='en-US', show_all=False)
+            response = r.recognize_google(audio, language=lang, show_all=False)
             self.responses[question] = response
         except sr.UnknownValueError:
             self.responses[question] = "Google Speech Recognition could not understand audio"
@@ -58,7 +101,7 @@ class TriageSystem:
         response_entry.update()
 
         # convert the question to speech
-        tts = gTTS(text=self.responses[question], lang='en', tld='co.in')
+        tts = gTTS(text=self.responses[question], lang=lang)
         tts.save("response.mp3")
 
         # play the question
@@ -74,9 +117,11 @@ class TriageSystem:
 triage_system = TriageSystem(timeout=60)
 question_index = 0
 
-
 def start_triage():
     global question_index
+    
+    response_entry.configure(height=10)
+    response_entry.update()
 
     if question_index == len(triage_system.questions) - 1:
         start_button.configure(text='Finish triage')
@@ -93,7 +138,42 @@ def start_triage():
     response_entry.delete('1.0', tk.END)
     response_entry.insert('1.0', triage_system.responses[triage_system.questions[question_index-1]])
 
+def show_settings():
+    setting = tk.Tk()
+    setting.title("Settings")
 
+    lang_label = ttk.Label(setting, text='Language:', font=("Arial", 14))
+    lang_label.pack(pady=5)
+
+    lang_var = tk.StringVar(setting)
+    lang_var.set(languages[lang])  # set default value
+
+    lang_dropdown = ttk.OptionMenu(setting, lang_var, *languages.values())
+    lang_dropdown.pack()
+
+    speed_label = ttk.Label(setting, text='Speed:', font=("Arial", 14))
+    speed_label.pack(pady=5)
+
+    speed_var = tk.StringVar(setting)
+    speed_var.set(speeds[str(speed)])  # set default value
+
+    speed_dropdown = ttk.OptionMenu(setting, speed_var, *speeds.values())
+    speed_dropdown.pack()
+
+    def apply_settings():
+        global lang, speed
+        lang = list(languages.keys())[list(languages.values()).index(lang_var.get())]
+        speed = float(list(speeds.keys())[list(speeds.values()).index(speed_var.get())])
+        # Translate questions
+        global questions
+        questions = translate_questions(lang)
+        # Save settings to file
+        with open('settings.txt', 'w') as f:
+            json.dump({'lang': lang, 'speed': speed}, f)
+        setting.destroy()
+
+    apply_button = ttk.Button(setting, text="Apply", command=apply_settings, style="TButton", padding=(10, 5))
+    apply_button.pack()
 
 # Create the main window
 window = tk.Tk()
@@ -112,14 +192,17 @@ class ResponseEntry(tk.Text):
         super().__init__(master, **kwargs)
         self.configure(font=("Arial", 12), wrap=tk.WORD)
 
-response_entry = ResponseEntry(window, width=50, height=10)
+response_entry = ResponseEntry(window, width=50, height=1)
 response_entry.pack()
 
 # Create a button to start/continue the triage process
 start_button = ttk.Button(window, text="Start/Next Question", command=start_triage, style="TButton", padding=(10, 5))
 start_button.pack()
 
-# Set the window size and center it on the screen
+settings_button = ttk.Button(window, text="Settings", command=show_settings, style="TButton", padding=(10, 5))
+settings_button.pack()
+
+# Set the window size and center it on the screen```python
 window.geometry("1000x500")
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
 
@@ -129,3 +212,4 @@ style.configure("TButton", font=("Arial", 14))
 
 # Start the GUI event loop
 window.mainloop()
+
