@@ -1,1 +1,1 @@
-{"lang": "en", "speed": 0.5}
+{"lang": "hi", "speed": 0.5}

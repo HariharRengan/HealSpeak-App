@@ -3,12 +3,14 @@ import speech_recognition as sr
 from pydub import AudioSegment
 from pydub.effects import normalize
 from gtts import gTTS
-from playsoundLocal import playsound
+from playsound import playsound
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import json
 from translate import Translator
+import ttkthemes as ttkt
+
 
 # Load settings from file
 with open('settings.txt', 'r') as f:
@@ -175,40 +177,50 @@ def show_settings():
     apply_button = ttk.Button(setting, text="Apply", command=apply_settings, style="TButton", padding=(10, 5))
     apply_button.pack()
 
+
 # Create the main window
-window = tk.Tk()
+window = ttkt.ThemedTk()
+window.set_theme("yaru")  # yaru, plastik
 window.title("Triage System")
 
-# Create a label to display the current question
-question_label = ttk.Label(window, text='Enter name:', font=("Arial", 16))
-question_label.pack(pady=20)
+# Set the background color of the window to turquoise
+window.configure(background='turquoise')
 
-# Create an entry field to display and edit the user's response
-response_label = ttk.Label(window, text="Your Response:", font=("Arial", 14))
-response_label.pack(pady=5)
+# Create a style
+style = ttk.Style()
+
+# Set the background color of the TButton to turquoise and the foreground color to red
+style.configure("TButton", background='turquoise', foreground='red', font=("Arial", 18))
+
+# Set the background color of the TLabel to turquoise and the foreground color to red
+style.configure("TLabel", background='turquoise', foreground='red')
+
+# Create a label to display the current question with a larger border, larger font, and yellow background
+question_label = ttk.Label(window, text='Enter name:', font=("Arial", 18), relief="solid", borderwidth=4, background='yellow')
+question_label.pack(pady=20, padx=20)  # Add some padding to create space around the label
+
+# Create an entry field to display and edit the user's response with a larger border, larger font, and yellow background
+response_label = ttk.Label(window, text="Your Response:", font=("Arial", 18), relief="solid", borderwidth=4, background='yellow')
+response_label.pack(pady=5, padx=20)  # Add some padding to create space around the label
 
 class ResponseEntry(tk.Text):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        self.configure(font=("Arial", 12), wrap=tk.WORD)
+        self.configure(font=("Arial", 18), wrap=tk.WORD, bg='turquoise', fg='red')
 
 response_entry = ResponseEntry(window, width=50, height=1)
-response_entry.pack()
+response_entry.pack(pady=10)  # Add some padding to create space between the text box and the buttons
 
-# Create a button to start/continue the triage process
-start_button = ttk.Button(window, text="Start/Next Question", command=start_triage, style="TButton", padding=(10, 5))
-start_button.pack()
+# Create a button to start/continue the triage process with increased padding
+start_button = ttk.Button(window, text="Start/Next Question", command=start_triage, style="TButton", padding=(20, 10))
+start_button.pack(pady=10)  # Add some padding to create space between the text box and the buttons
 
-settings_button = ttk.Button(window, text="Settings", command=show_settings, style="TButton", padding=(10, 5))
-settings_button.pack()
+settings_button = ttk.Button(window, text="Settings", command=show_settings, style="TButton", padding=(20, 10))
+settings_button.pack(pady=10)  # Add some padding to create space between the text box and the buttons
 
-# Set the window size and center it on the screen```python
+# Set the window size and center it on the screen
 window.geometry("1000x500")
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
-
-# Configure ttk style
-style = ttk.Style(window)
-style.configure("TButton", font=("Arial", 14))
 
 # Start the GUI event loop
 window.mainloop()
