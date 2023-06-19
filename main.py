@@ -171,7 +171,6 @@ class TriageSystem:
             4: "https://www.mayoclinic.org/diseases-conditions/broken-bones/symptoms-causes/syc-20353674",
             5: "https://www.mayoclinic.org/diseases-conditions/common-cold/symptoms-causes/syc-20351605",
         }
-
         # Create an empty dictionary to hold the symptom keywords for each category
         category_keywords = {}
 
@@ -182,9 +181,11 @@ class TriageSystem:
 
             # Parse the HTML content of the page with BeautifulSoup
             soup = BeautifulSoup(response.content, 'html.parser')
+            print(soup)
 
             # Find all instances of a certain HTML element that contains the symptoms
             symptom_elements = soup.find_all('div', class_='symptom')
+            print(symptom_elements)
 
             # Create an empty list to hold the symptom keywords
             symptoms = []
@@ -195,7 +196,7 @@ class TriageSystem:
 
             # Add the list of symptom keywords to the category_keywords dictionary
             category_keywords[category] = symptoms
-
+        print(category_keywords)
         return category_keywords
 
     def categorize_response(self, response, category_keywords):
