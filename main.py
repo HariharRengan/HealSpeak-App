@@ -341,23 +341,22 @@ response_label.pack(pady=5, padx=20, ipadx=20, ipady=10)  # Add some padding to 
 class ResponseEntry(tk.Text):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        self.configure(font=("Arial", 18), wrap=tk.WORD, bg='azure2', fg='gray')
+        self.configure(font=("Arial", 18), wrap=tk.WORD, bg='azure2', fg='red')
 
-response_entry = ResponseEntry(window, width=50, height=1)
-response_entry.pack(pady=10)  # Add some padding to create space between the text box and the buttons
+response_entry = ResponseEntry(window, width=60, height=1)
+response_entry.pack(pady=15)  # Add some padding to create space between the text box and the buttons
 
 # Create a button to start/continue the triage process with increased padding
-start_button = tk.Button(window, text="Start/Next Question", command=start_triage, bg='#007bff', fg='white', font=("Arial", 18), padx=20, pady=10)
+start_button = tk.Button(window, text="Start/Next Question", command=start_triage, bg='#007bff', fg='black', font=("Arial", 18), padx=20, pady=10)
 start_button.pack(pady=10)  # Add some padding to create space between the text box and the buttons
 
-settings_button = tk.Button(window, text="Settings", command=show_settings, bg='#6c757d', fg='white', font=("Arial", 18), padx=20, pady=10)
+settings_button = tk.Button(window, text="Settings", command=show_settings, bg='#6c757d', fg='black', font=("Arial", 18), padx=20, pady=10)
 settings_button.pack(pady=10)  # Add some padding to create space between the text box and the buttons
 
 # Set the window size and center it on the screen
-window.geometry("1000x500")
+window.geometry("1000x1000")
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
 
 # Start the GUI event loop
 window.mainloop()
-
 
