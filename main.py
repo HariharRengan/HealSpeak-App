@@ -3,7 +3,7 @@ import speech_recognition as sr
 from pydub import AudioSegment
 from pydub.effects import normalize
 from gtts import gTTS
-from playsound import playsound
+from playsoundLocal import playsound
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
