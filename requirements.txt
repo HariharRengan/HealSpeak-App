@@ -1,0 +1,10 @@
+bs4==0.0.1
+gTTS==2.3.2
+PyAudio==0.2.13
+pydub==0.25.1
+soundfile==0.12.1
+SpeechRecognition==3.10.0
+translate==3.6.1
+ttkthemes==3.2.2
+nltk==3.1.8
+noisereduce==2.0.1
