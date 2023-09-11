@@ -8,5 +8,5 @@ HealSpeak creates a Virtual Triage system for Hospital workers allowing them to 
 </ul>
 <br>
 <h2>Prerequisites:</h2>
-Enter the following into cmd at the root directory of the project (windows):
+Enter the following into cmd at the root directory of the project (Windows):
 <code>pip install -r requirements.txt</code> and <code>winget ffmpeg</code>
